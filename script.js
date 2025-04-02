@@ -43,3 +43,47 @@ for (var i = 0; i < navLinks.length; i++) {
     menuBtn.style.pointerEvents = "auto";
   });
 }
+
+// GitHub Information Update Function
+function updateGitHubInfo() {
+  const githubDetailsElement = document.getElementById('github-details');
+  
+  fetch('https://api.github.com/users/lewiskirega')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Extract useful information from the GitHub API response
+      const bio = data.bio || 'Front-end Web Developer and Cybersecurity Expert';
+      const repoCount = data.public_repos || 0;
+      const followers = data.followers || 0;
+      const location = data.location || 'Kenya';
+      
+      // Create a formatted message with the GitHub information
+      const githubInfo = `
+        I am Lewis Kirega, a ${bio} based in ${location}. 
+        I design intuitive, responsive web interfaces and secure digital systems. 
+        My expertise includes HTML, CSS, JavaScript, Python, and C++, along with a strong focus on 
+        vulnerability assessments and secure system design to protect digital assets.
+        I have ${repoCount} public repositories on GitHub and ${followers} followers.
+      `;
+      
+      // Update the element with the new information
+      if (githubDetailsElement) {
+        githubDetailsElement.innerHTML = githubInfo;
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching GitHub information:', error);
+      // Keep the existing content in case of an error
+      if (githubDetailsElement) {
+        console.log('Failed to update GitHub information. Using default content.');
+      }
+    });
+}
+
+// Call the function when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', updateGitHubInfo);
